@@ -1,15 +1,19 @@
-package com.example.daniel.medtest;
+package com.example.daniel.medtest.gui;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.daniel.medtest.R;
+
+public class MainActivity extends AppCompatActivity implements ReplaceabelFragment.OnHeadlineSelectedListener{
+
+    FragmentIntputTest mFragmentInput = new FragmentIntputTest();
+    FragmentSession mFragmentSession = new FragmentSession();
+    FragmentTestsOverview mFragmentOverview = new FragmentTestsOverview();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,14 +22,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        callOverviewFragment();
     }
 
     @Override
@@ -48,5 +45,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void callInputFragment() {
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_layout, mFragmentInput)
+                .commit();
+    }
+
+    @Override
+    public void callSessionFragment() {
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_layout, mFragmentSession)
+                .commit();
+    }
+
+    @Override
+    public void callOverviewFragment() {
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_layout, mFragmentOverview)
+                .commit();
     }
 }
