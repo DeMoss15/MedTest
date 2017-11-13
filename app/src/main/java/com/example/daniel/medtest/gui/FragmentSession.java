@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.example.daniel.medtest.R;
 
-public class FragmentSession extends ReplaceabelFragment {
+public final class FragmentSession extends ReplaceabelFragment {
 
 
     public FragmentSession() {

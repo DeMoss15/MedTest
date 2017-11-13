@@ -3,6 +3,7 @@ package com.example.daniel.medtest.gui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,19 +11,31 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.daniel.medtest.R;
+import com.example.daniel.medtest.logic.FileParser;
+import com.example.daniel.medtest.logic.ListOfTests;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentTestsOverview extends ReplaceabelFragment {
+import static android.app.Activity.RESULT_OK;
 
+public final class FragmentTestsOverview extends ReplaceabelFragment {
+
+    private final int BROWSE_FILE_REQUEST_CODE = 1;
     @BindView(R.id.lv_tests)
-    ListView ListViewTests;
+    ListView mListViewTests;
+    @BindView(R.id.fab)
+    FloatingActionButton mFAB;
 
     AlertDialog.Builder mAlertDialog;
+    ListOfTests mTests = ListOfTests.getInstance();
+    FileParser mParser = new FileParser();
 
     public FragmentTestsOverview() {
     }
@@ -41,6 +54,7 @@ public class FragmentTestsOverview extends ReplaceabelFragment {
 
         final Context context = getContext();
 
+        // alert dialog settings
         mAlertDialog = new AlertDialog.Builder(context);
         mAlertDialog.setTitle("Adding test");
         mAlertDialog.setMessage("Choose way to add test");
@@ -53,9 +67,12 @@ public class FragmentTestsOverview extends ReplaceabelFragment {
         });
         mAlertDialog.setNegativeButton("Add from file", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int arg1) {
-                /*TODO: call here file input menu*/
-                if (getView() != null)
-                    Snackbar.make(getView(), "Here will be explorer", Snackbar.LENGTH_LONG).show();
+                // selecting file
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+
+                startActivityForResult(intent,
+                        BROWSE_FILE_REQUEST_CODE);
             }
         });
         mAlertDialog.setCancelable(true);
@@ -66,14 +83,52 @@ public class FragmentTestsOverview extends ReplaceabelFragment {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        // listener for floating action button "ADD"
+        mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mAlertDialog.show();
             }
         });
 
+        // filling list view
+        updateList();
+
         /*TODO: define here test session call by click on list item*/
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        File file = null;
+                
+        switch(requestCode){
+            case BROWSE_FILE_REQUEST_CODE:
+                if(resultCode == RESULT_OK && data.getData() != null){
+                    file = new File(data.getData().toString());
+                }
+                break;
+        }
+
+        if (file != null){
+            mParser = new FileParser();
+            mParser.setFile(file);
+            mParser.setFragment(this);
+            mParser.execute();
+        }
+    }
+
+    public void updateList() {
+        String[] testsNames = mTests.getTestsNames();
+
+        if(testsNames.length == 1 && testsNames[0].isEmpty())
+            testsNames[0] = "Database is empty\nYou may add test via button below";
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getContext(),
+                android.R.layout.simple_list_item_1,
+                testsNames);
+
+        mListViewTests.setAdapter(adapter);
     }
 }
