@@ -2,7 +2,6 @@ package com.example.daniel.medtest.datatypes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Daniel on 13.11.2017.

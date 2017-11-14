@@ -8,8 +8,6 @@ import com.example.daniel.medtest.datatypes.Test;
 import com.example.daniel.medtest.gui.FragmentTestsOverview;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,7 +51,7 @@ public final class FileParser extends AsyncTask {
 
                 if (lineOfText.startsWith(EMPTY_LINE)) {
                     // if empty line miss iteration
-                    break;
+                    continue;
 
                 } else if (lineOfText.startsWith(NEW_TEST)) {
 
@@ -91,6 +89,8 @@ public final class FileParser extends AsyncTask {
                     if (currentAnswersSet != null) {
                         currentAnswersSet.put(lineOfText, false);
                     }
+
+                    Log.d(LOG_PARSING, "New answer " + lineOfText);
 
                 }
 

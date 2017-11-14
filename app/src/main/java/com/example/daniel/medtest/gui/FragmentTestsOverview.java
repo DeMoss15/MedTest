@@ -20,7 +20,6 @@ import com.example.daniel.medtest.R;
 import com.example.daniel.medtest.logic.FileParser;
 import com.example.daniel.medtest.logic.ListOfTests;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -73,7 +72,7 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
             public void onClick(DialogInterface dialog, int arg1) {
                 // selecting file
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
+                intent.setType("text/plain");
 
                 startActivityForResult(intent,
                         BROWSE_FILE_REQUEST_CODE);
