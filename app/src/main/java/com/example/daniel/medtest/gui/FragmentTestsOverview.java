@@ -104,29 +104,25 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        File file = null;
+        InputStream fileStream = null;
                 
         switch(requestCode){
             case BROWSE_FILE_REQUEST_CODE:
                 if(resultCode == RESULT_OK && data.getData() != null){
                     Uri uri = data.getData();
 
-                    /*InputStream fileStream = null;
                     try {
                         fileStream = mContext.getContentResolver().openInputStream(uri);
                     } catch (IOException e) {
-                        Log.e(this.getClass().getName(), e.getMessage());
-                    }*/
-
-                    file = new File(uri.getPath());
-                    Log.d("PARSING", "FUUUUUCK");
+                        Log.d("PARSING", "Input Stream error" + e.getMessage());
+                    }
                 }
                 break;
         }
 
-        if (file != null){
+        if (fileStream != null){
             mParser = new FileParser();
-            mParser.setFile(file);
+            mParser.setFileStream(fileStream);
             mParser.setFragment(this);
             mParser.execute();
         }

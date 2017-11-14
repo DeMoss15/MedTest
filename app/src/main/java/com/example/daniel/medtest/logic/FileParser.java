@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,9 +26,10 @@ public final class FileParser extends AsyncTask {
     private final String NEW_TEST = "$";
     private final String NEW_QUESTION = "?";
     private final String RIGHT_ANSWER = "*";
+    private final String EMPTY_LINE = "+";
     private final String LOG_PARSING = "PARSING";
 
-    private File mFile = null;
+    private InputStream mFileStream = null;
     private ListOfTests mTests = ListOfTests.getInstance();
     private FragmentTestsOverview fragment = null;
 
@@ -34,11 +37,8 @@ public final class FileParser extends AsyncTask {
     protected Object doInBackground(Object[] objects) {
         /*TODO Pars file here*/
         //mTests.addTest(new Test("Test from parallel thread"));
-        if (!mFile.canRead()){
-            Log.d(LOG_PARSING, "File can't be read");
-        }
 
-        try (FileReader reader = new FileReader(mFile)) {
+        try (InputStreamReader reader = new InputStreamReader(mFileStream)) {
 
             Log.d(LOG_PARSING, "Parsing starts");
             String lineOfText;
@@ -47,9 +47,11 @@ public final class FileParser extends AsyncTask {
             Map<String, Boolean> currentAnswersSet = null;
             BufferedReader bufferedReader = new BufferedReader(reader);
 
-            while ((lineOfText = bufferedReader.readLine()) != null) {
+            lineOfText = bufferedReader.readLine();
 
-                if (lineOfText.isEmpty()) {
+            do {
+
+                if (lineOfText.startsWith(EMPTY_LINE)) {
                     // if empty line miss iteration
                     break;
 
@@ -59,7 +61,7 @@ public final class FileParser extends AsyncTask {
                     if(currentTest != null) {
                         mTests.addTest(currentTest);
                     }
-                    Log.d(LOG_PARSING, "New test " + lineOfText.indexOf(NEW_TEST) + 1);
+                    Log.d(LOG_PARSING, "New test " + lineOfText.substring(lineOfText.indexOf(NEW_TEST) + 1));
                     currentTest = new Test(lineOfText.substring(lineOfText.indexOf(NEW_TEST) + 1));
 
                 } else if (lineOfText.startsWith(NEW_QUESTION)) {
@@ -71,7 +73,7 @@ public final class FileParser extends AsyncTask {
                         currentQuestion.setAnswers(currentAnswersSet);
                         currentTest.addQuestion(currentQuestion);
                     }
-                    Log.d(LOG_PARSING, "New question " + lineOfText.indexOf(NEW_QUESTION) + 1);
+                    Log.d(LOG_PARSING, "New question " + lineOfText.substring(lineOfText.indexOf(NEW_QUESTION) + 1));
                     currentQuestion = new Question(lineOfText.substring(lineOfText.indexOf(NEW_QUESTION) + 1));
                     currentAnswersSet = new HashMap<>();
 
@@ -91,7 +93,19 @@ public final class FileParser extends AsyncTask {
                     }
 
                 }
-            }// end of while cycle
+
+            } while ((lineOfText = bufferedReader.readLine()) != null);
+
+            // adding last test
+            if (currentAnswersSet != null){
+                currentQuestion.setAnswers(currentAnswersSet);
+            }
+            if (currentQuestion != null){
+                currentTest.addQuestion(currentQuestion);
+            }
+            if (currentTest != null) {
+                mTests.addTest(currentTest);
+            }
 
             bufferedReader.close();
             reader.close();
@@ -113,8 +127,8 @@ public final class FileParser extends AsyncTask {
             fragment.updateList();
     }
 
-    public void setFile(File file) {
-        this.mFile = file;
+    public void setFileStream(InputStream fileStream) {
+        this.mFileStream = fileStream;
     }
 
     public void setFragment(FragmentTestsOverview fragment) {

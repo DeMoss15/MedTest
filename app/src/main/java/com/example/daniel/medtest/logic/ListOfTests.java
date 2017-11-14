@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Daniel on 13.11.2017.
  */
 
-public class ListOfTests {
+public final class ListOfTests {
 
     private List<Test> mTests;
 
