@@ -31,7 +31,8 @@ public final class FragmentIntputTest extends ReplaceabelFragment {
     @BindView(R.id.button_add_test)
     Button mButtonAddTest;
 
-    ListOfTests mTests = ListOfTests.getInstance();
+    private ListOfTests mTests = ListOfTests.getInstance();
+    private Context mContext;
 
     public FragmentIntputTest() {
         // Required empty public constructor
@@ -43,14 +44,13 @@ public final class FragmentIntputTest extends ReplaceabelFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_intput_test, container, false);
         ButterKnife.bind(this, view);
+        mContext = view.getContext();
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        final Context context = getContext();
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -60,7 +60,7 @@ public final class FragmentIntputTest extends ReplaceabelFragment {
                 }
                 switch (view.getId()){
                     case R.id.button_add_question: {
-                        Toast.makeText(context, "This function is in dev", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "This function is in dev", Toast.LENGTH_LONG).show();
                         break;
                     }
                     case R.id.button_add_test: {

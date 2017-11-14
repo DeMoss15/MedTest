@@ -31,8 +31,8 @@ public final class Test {
         return mTestName;
     }
 
-    public void addQuestion(String question, Map<String, Boolean> answers) {
-        mQuestions.add(new Question(question, answers));
+    public void addQuestion(Question question) {
+        mQuestions.add(question);
     }
 
     public List<Question> getQuestions() {

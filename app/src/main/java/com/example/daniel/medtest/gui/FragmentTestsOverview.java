@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import com.example.daniel.medtest.logic.FileParser;
 import com.example.daniel.medtest.logic.ListOfTests;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,9 +37,10 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
     @BindView(R.id.fab)
     FloatingActionButton mFAB;
 
-    AlertDialog.Builder mAlertDialog;
-    ListOfTests mTests = ListOfTests.getInstance();
-    FileParser mParser = new FileParser();
+    private AlertDialog.Builder mAlertDialog;
+    private ListOfTests mTests = ListOfTests.getInstance();
+    private FileParser mParser = new FileParser();
+    private Context mContext;
 
     public FragmentTestsOverview() {
     }
@@ -45,6 +50,7 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tests_overview, container, false);
         ButterKnife.bind(this, view);
+        mContext = view.getContext();
         return view;
     }
 
@@ -52,10 +58,8 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final Context context = getContext();
-
         // alert dialog settings
-        mAlertDialog = new AlertDialog.Builder(context);
+        mAlertDialog = new AlertDialog.Builder(mContext);
         mAlertDialog.setTitle("Adding test");
         mAlertDialog.setMessage("Choose way to add test");
         mAlertDialog.setPositiveButton("Add by typing", new DialogInterface.OnClickListener() {
@@ -105,7 +109,17 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
         switch(requestCode){
             case BROWSE_FILE_REQUEST_CODE:
                 if(resultCode == RESULT_OK && data.getData() != null){
-                    file = new File(data.getData().toString());
+                    Uri uri = data.getData();
+
+                    /*InputStream fileStream = null;
+                    try {
+                        fileStream = mContext.getContentResolver().openInputStream(uri);
+                    } catch (IOException e) {
+                        Log.e(this.getClass().getName(), e.getMessage());
+                    }*/
+
+                    file = new File(uri.getPath());
+                    Log.d("PARSING", "FUUUUUCK");
                 }
                 break;
         }
@@ -125,7 +139,7 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
             testsNames[0] = "Database is empty\nYou may add test via button below";
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getContext(),
+                mContext,
                 android.R.layout.simple_list_item_1,
                 testsNames);
 

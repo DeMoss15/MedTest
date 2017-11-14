@@ -28,12 +28,14 @@ public class ListOfTests {
     }
 
     public String[] getTestsNames() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
+
         for (int i = 0; i < mTests.size(); i++) {
-            result += mTests.get(i).getTestName();
-            if (i < mTests.size() - 1)
-                result += "/S/";
+            result.append(mTests.get(i).getTestName());
+            if (i < mTests.size() - 1){
+                result.append("/S/");
+            }
         }
-        return result.split("/S/");
+        return result.toString().split("/S/");
     }
 }

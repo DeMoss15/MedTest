@@ -12,21 +12,20 @@ public final class Question {
     private String mQuestion;
     private Map<String, Boolean> mAnswers;
 
-    Question() {
+    public Question() {
         mQuestion = "Empty question";
         mAnswers = new HashMap<>();
     }
 
-    Question(String Question, Map<String, Boolean> Answers){
-        this.mQuestion =Question;
-        this.mAnswers = Answers;
+    public Question(String question){
+        this.mQuestion = question;
     }
 
-    public void setQuestion(String Question) {
-        this.mQuestion = Question;
+    public void setQuestion(String question) {
+        this.mQuestion = question;
     }
 
-    public void setAnswers(Map<String, Boolean> Answers) {
-        this.mAnswers = Answers;
+    public void setAnswers(Map<String, Boolean> answers) {
+        this.mAnswers = answers;
     }
 }
