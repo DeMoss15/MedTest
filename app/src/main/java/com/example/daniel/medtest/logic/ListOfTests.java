@@ -38,4 +38,8 @@ public final class ListOfTests {
         }
         return result.toString().split("/S/");
     }
+
+    public List<Test> getTests(){
+        return mTests;
+    }
 }

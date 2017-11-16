@@ -6,17 +6,19 @@ import android.app.Fragment;
 import com.example.daniel.medtest.datatypes.Test;
 
 /**
- * Created by Daniel on 12.11.2017.
+ * Created by Daniel on 16.11.2017.
  */
 
-public class ReplaceabelFragment extends Fragment {
+public class FragmentSubSession extends Fragment {
 
     OnHeadlineSelectedListener mCallback;
 
     interface OnHeadlineSelectedListener{
-        void callInputFragment();
-        void callSessionActivity(Test test);
-        void callOverviewFragment();
+
+        void callSessionStart(Test test);
+        void callSessionProcess(Test test);
+        void callSessionEnd(Test test);
+        void cancelSession();
     };
 
 

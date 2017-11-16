@@ -1,5 +1,6 @@
 package com.example.daniel.medtest.datatypes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * Created by Daniel on 13.11.2017.
  */
 
-public final class Test {
+public final class Test implements Serializable {
 
     private String mTestName;
     private List<Question> mQuestions;

@@ -1,5 +1,6 @@
 package com.example.daniel.medtest.datatypes;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * Created by Daniel on 13.11.2017.
  */
 
-public final class Question {
+public final class Question implements Serializable{
 
     private String mQuestion;
     private Map<String, Boolean> mAnswers;

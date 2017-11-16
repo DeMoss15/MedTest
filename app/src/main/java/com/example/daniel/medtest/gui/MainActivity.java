@@ -1,5 +1,6 @@
 package com.example.daniel.medtest.gui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -8,12 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.daniel.medtest.R;
+import com.example.daniel.medtest.datatypes.Test;
 
 public class MainActivity extends AppCompatActivity implements ReplaceabelFragment.OnHeadlineSelectedListener{
 
     FragmentIntputTest mFragmentInput = new FragmentIntputTest();
-    FragmentSession mFragmentSession = new FragmentSession();
     FragmentTestsOverview mFragmentOverview = new FragmentTestsOverview();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements ReplaceabelFragme
     }
 
     @Override
-    public void callSessionFragment() {
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_layout, mFragmentSession)
-                .commit();
+    public void callSessionActivity(Test test) {
+        // intent session activity
+        Intent intent = new Intent(MainActivity.this, SessionActivity.class);
+        intent.putExtra("TEST_TO_START", test);
+        startActivity(intent);
     }
 
     @Override
@@ -70,4 +72,6 @@ public class MainActivity extends AppCompatActivity implements ReplaceabelFragme
                 .replace(R.id.fragment_layout, mFragmentOverview)
                 .commit();
     }
+
+
 }

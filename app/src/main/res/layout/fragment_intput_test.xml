@@ -16,10 +16,12 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Add question"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_add_test" />
+        app:layout_constraintStart_toEndOf="@+id/button_add_test"
+        app:layout_constraintTop_toBottomOf="@+id/lv_questions" />
 
     <Button
         android:id="@+id/button_add_test"

@@ -13,12 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.daniel.medtest.R;
+import com.example.daniel.medtest.datatypes.Test;
 import com.example.daniel.medtest.logic.FileParser;
 import com.example.daniel.medtest.logic.ListOfTests;
+import com.example.daniel.medtest.logic.TestsAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +39,7 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
     FloatingActionButton mFAB;
 
     private AlertDialog.Builder mAlertDialog;
-    private ListOfTests mTests = ListOfTests.getInstance();
+    private ListOfTests mListOfTests = ListOfTests.getInstance();
     private FileParser mParser = new FileParser();
     private Context mContext;
 
@@ -98,6 +100,14 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
         updateList();
 
         /*TODO: define here test session call by click on list item*/
+        mListViewTests.setClickable(true);
+
+        mListViewTests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mCallback.callSessionActivity((Test)adapterView.getItemAtPosition(i));
+            }
+        });
     }
 
     @Override
@@ -128,16 +138,11 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
     }
 
     public void updateList() {
-        String[] testsNames = mTests.getTestsNames();
+       TestsAdapter testsAdapter = new TestsAdapter(
+               mContext,
+               android.R.layout.simple_list_item_1,
+               mListOfTests.getTests());
 
-        if(testsNames.length == 1 && testsNames[0].isEmpty())
-            testsNames[0] = "Database is empty\nYou may add test via button below";
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                mContext,
-                android.R.layout.simple_list_item_1,
-                testsNames);
-
-        mListViewTests.setAdapter(adapter);
+       mListViewTests.setAdapter(testsAdapter);
     }
 }
