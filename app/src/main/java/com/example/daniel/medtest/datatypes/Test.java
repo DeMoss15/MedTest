@@ -2,6 +2,7 @@ package com.example.daniel.medtest.datatypes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -15,12 +16,12 @@ public final class Test implements Serializable {
 
     public Test() {
         mTestName = "";
-        mQuestions = new ArrayList<>();
+        mQuestions = new LinkedList<>();
     }
 
     public Test(String testName) {
         this.mTestName = testName;
-        mQuestions = new ArrayList<>();
+        mQuestions = new LinkedList<>();
     }
 
     public void setTestName(String testName) {

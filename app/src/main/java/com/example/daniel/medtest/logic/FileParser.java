@@ -3,6 +3,7 @@ package com.example.daniel.medtest.logic;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.daniel.medtest.datatypes.Answer;
 import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.datatypes.Test;
 import com.example.daniel.medtest.gui.FragmentTestsOverview;
@@ -11,7 +12,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,63 +45,72 @@ public final class FileParser extends AsyncTask {
             String lineOfText;
             Test currentTest = null;
             Question currentQuestion = null;
-            Map<String, Boolean> currentAnswersSet = null;
+            List<Answer> currentAnswersList = null;
             BufferedReader bufferedReader = new BufferedReader(reader);
 
             lineOfText = bufferedReader.readLine();
 
             do {
 
-                if (lineOfText.startsWith(EMPTY_LINE)) {
-                    // if empty line miss iteration
-                    continue;
-
-                } else if (lineOfText.startsWith(NEW_TEST)) {
+                if (lineOfText.startsWith(NEW_TEST)) {
 
                     // if line contains new test name, add previous test in list and create new one
                     if(currentTest != null) {
+                        if (currentAnswersList != null){
+                            currentQuestion.setAnswers(currentAnswersList);
+                        }
+                        if (currentQuestion != null){
+                            currentTest.addQuestion(currentQuestion);
+                        }
                         mTests.addTest(currentTest);
                     }
-                    Log.d(LOG_PARSING, "New test " + lineOfText.substring(lineOfText.indexOf(NEW_TEST) + 1));
+
                     currentTest = new Test(lineOfText.substring(lineOfText.indexOf(NEW_TEST) + 1));
+                    currentQuestion = null;
+                    currentAnswersList = null;
 
                 } else if (lineOfText.startsWith(NEW_QUESTION)) {
 
                     // if line contains new question add previous to current test and create new one
-                    if (currentTest != null
-                            && currentQuestion != null
-                            && currentAnswersSet != null) {
-                        currentQuestion.setAnswers(currentAnswersSet);
+                    if (currentTest != null && currentQuestion != null) {
+
+                        if (currentAnswersList != null){
+                            currentQuestion.setAnswers(currentAnswersList);
+                        }
+
                         currentTest.addQuestion(currentQuestion);
+
                     }
-                    Log.d(LOG_PARSING, "New question " + lineOfText.substring(lineOfText.indexOf(NEW_QUESTION) + 1));
+
+                    Log.d(LOG_PARSING, "Test " + currentTest.getTestName() + " add question "
+                            + lineOfText.substring(lineOfText.indexOf(NEW_QUESTION) + 1));
+
                     currentQuestion = new Question(lineOfText.substring(lineOfText.indexOf(NEW_QUESTION) + 1));
-                    currentAnswersSet = new HashMap<>();
+                    currentAnswersList = new ArrayList<>();
 
                 } else if (lineOfText.startsWith(RIGHT_ANSWER)) {
 
                     // add right answer
-                    if (currentAnswersSet != null) {
-                        currentAnswersSet.put(lineOfText.substring(lineOfText.indexOf(RIGHT_ANSWER) + 1),
-                                true);
+                    if (currentAnswersList != null) {
+                        currentAnswersList.add(new Answer(
+                                lineOfText.substring(lineOfText.indexOf(RIGHT_ANSWER) + 1),
+                                true));
                     }
 
-                } else {
+                } else if (!lineOfText.startsWith(EMPTY_LINE)) {
 
                     // add answer
-                    if (currentAnswersSet != null) {
-                        currentAnswersSet.put(lineOfText, false);
+                    if (currentAnswersList != null) {
+                        currentAnswersList.add(new Answer(lineOfText, false));
                     }
-
-                    Log.d(LOG_PARSING, "New answer " + lineOfText);
 
                 }
 
             } while ((lineOfText = bufferedReader.readLine()) != null);
 
             // adding last test
-            if (currentAnswersSet != null){
-                currentQuestion.setAnswers(currentAnswersSet);
+            if (currentAnswersList != null){
+                currentQuestion.setAnswers(currentAnswersList);
             }
             if (currentQuestion != null){
                 currentTest.addQuestion(currentQuestion);
@@ -106,6 +118,9 @@ public final class FileParser extends AsyncTask {
             if (currentTest != null) {
                 mTests.addTest(currentTest);
             }
+
+            /*Log.d(LOG_PARSING, "Test " + currentTest.getTestName() + " add question "
+                    + lineOfText.substring(lineOfText.indexOf(NEW_QUESTION) + 1));*/
 
             bufferedReader.close();
             reader.close();

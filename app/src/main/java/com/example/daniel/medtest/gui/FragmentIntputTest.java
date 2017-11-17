@@ -20,7 +20,7 @@ import com.example.daniel.medtest.logic.ListOfTests;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class FragmentIntputTest extends ReplaceabelFragment {
+public final class FragmentIntputTest extends ReplaceabelFragment implements View.OnClickListener {
 
     @BindView(R.id.lv_questions)
     ListView mListViewQuestions;
@@ -30,6 +30,8 @@ public final class FragmentIntputTest extends ReplaceabelFragment {
     Button mButtonAddQuestion;
     @BindView(R.id.button_add_test)
     Button mButtonAddTest;
+    @BindView(R.id.button_cancel_input)
+    Button mButtonCancel;
 
     private ListOfTests mTests = ListOfTests.getInstance();
     private Context mContext;
@@ -52,27 +54,9 @@ public final class FragmentIntputTest extends ReplaceabelFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (view == null || !(view instanceof TextView)) {
-                    return; //нет свойства text
-                }
-                switch (view.getId()){
-                    case R.id.button_add_question: {
-                        Toast.makeText(mContext, "This function is in dev", Toast.LENGTH_LONG).show();
-                        break;
-                    }
-                    case R.id.button_add_test: {
-                        createTest();
-                        break;
-                    }
-                }
-            }
-        };
-
-        mButtonAddQuestion.setOnClickListener(listener);
-        mButtonAddTest.setOnClickListener(listener);
+        mButtonAddQuestion.setOnClickListener(this);
+        mButtonAddTest.setOnClickListener(this);
+        mButtonCancel.setOnClickListener(this);
     }
 
     private void createTest() {
@@ -82,5 +66,26 @@ public final class FragmentIntputTest extends ReplaceabelFragment {
 
         mTests.addTest(newTest);
         mCallback.callOverviewFragment();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == null || !(view instanceof TextView)) {
+            return; //нет свойства text
+        }
+        switch (view.getId()){
+            case R.id.button_add_question: {
+                Toast.makeText(mContext, "This function is in dev", Toast.LENGTH_LONG).show();
+                break;
+            }
+            case R.id.button_add_test: {
+                createTest();
+                break;
+            }
+            case R.id.button_cancel_input: {
+                mCallback.callOverviewFragment();
+                break;
+            }
+        }
     }
 }

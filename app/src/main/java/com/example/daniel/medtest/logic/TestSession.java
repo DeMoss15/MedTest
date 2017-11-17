@@ -1,5 +1,7 @@
 package com.example.daniel.medtest.logic;
 
+import android.util.Log;
+
 import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.datatypes.Test;
 
@@ -13,14 +15,14 @@ import java.util.Set;
 
 public final class TestSession {
 
-    private Test mCoosedTest;
+    private Test mChoosedTest;
     private int mNumOfQuestionsInSession;
     private long mTimeInMilliseconds;
     private boolean mShuffling;
     private Set<Integer> mShowedQuestions;
 
     public TestSession(Test test, int numOfQuestionsInSession, long timeForTesting, boolean shuffling){
-        this.mCoosedTest = test;
+        this.mChoosedTest = test;
         this.mNumOfQuestionsInSession = numOfQuestionsInSession;
         this.mTimeInMilliseconds = timeForTesting;
         this.mShuffling = shuffling;
@@ -32,21 +34,39 @@ public final class TestSession {
             return null;
         }
 
-        int nextNum = new Random().nextInt(mCoosedTest.getQuestions().size());
+        int nextNum;
 
         if (mShuffling) {
-            nextNum = new Random().nextInt(mCoosedTest.getQuestions().size());
+            nextNum = new Random().nextInt(mChoosedTest.getQuestions().size());
 
             while (mShowedQuestions.contains(nextNum)) {
-                nextNum = new Random().nextInt(mCoosedTest.getQuestions().size());
+                nextNum = new Random().nextInt(mChoosedTest.getQuestions().size());
             }
 
             mShowedQuestions.add(nextNum);
         } else {
             // i++ in other way
-            mShowedQuestions.add(mShowedQuestions.size());
+            nextNum = mShowedQuestions.size();
         }
 
-        return mCoosedTest.getQuestions().get(nextNum);
+        mShowedQuestions.add(nextNum);
+
+        return mChoosedTest.getQuestions().get(nextNum);
+    }
+
+    public long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
+    }
+
+    public String getTestName() {
+        return mChoosedTest.getTestName();
+    }
+
+    public int getNumOfQuestionsInTest() {
+        return mChoosedTest.getQuestions().size();
+    }
+
+    public int getNumOfQuestions() {
+        return mNumOfQuestionsInSession;
     }
 }

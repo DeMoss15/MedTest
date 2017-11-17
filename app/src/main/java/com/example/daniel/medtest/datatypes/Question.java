@@ -1,7 +1,9 @@
 package com.example.daniel.medtest.datatypes;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,22 +13,21 @@ import java.util.Map;
 public final class Question implements Serializable{
 
     private String mQuestion;
-    private Map<String, Boolean> mAnswers;
-
-    public Question() {
-        mQuestion = "Empty question";
-        mAnswers = new HashMap<>();
-    }
+    private List<Answer> mAnswers;
 
     public Question(String question){
         this.mQuestion = question;
     }
 
-    public void setQuestion(String question) {
-        this.mQuestion = question;
+    public String getmQuestion(){
+        return mQuestion;
     }
 
-    public void setAnswers(Map<String, Boolean> answers) {
+    public void setAnswers(List<Answer> answers) {
         this.mAnswers = answers;
+    }
+
+    public List<Answer> getAnswers() {
+        return mAnswers;
     }
 }
