@@ -1,7 +1,5 @@
 package com.example.daniel.medtest.logic;
 
-import android.util.Log;
-
 import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.datatypes.Test;
 
