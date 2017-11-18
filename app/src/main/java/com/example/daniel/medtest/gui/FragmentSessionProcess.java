@@ -8,11 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.daniel.medtest.R;
+import com.example.daniel.medtest.datatypes.Answer;
 import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.logic.AnswersAdapter;
 import com.example.daniel.medtest.logic.TestSession;
@@ -31,6 +34,8 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     TextView mTextViewTestName;
     @BindView(R.id.tv_question_proc)
     TextView mTextViewQuestion;
+    @BindView(R.id.text_view_timer)
+    TextView mTextViewTime;
     @BindView(R.id.button_commit)
     Button mButtonCommit;
     @BindView(R.id.button_finish_test)
@@ -40,6 +45,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     private Question mCurrentQuestion;
     private boolean mIsAnswerCommited;
     private Context mContext;
+    private int mNumOfRightAnswers = 0;
 
     public FragmentSessionProcess() {
         // Required empty public constructor
@@ -72,6 +78,12 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
             mTextViewTestName.setText(mSession.getTestName());
             updateLayout();
 
+            if (mSession.getTimeInMilliseconds() == 0) {
+                mTextViewTime.setText("");
+            }
+            mListViewAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            mListViewAnswers.setSelector(android.R.color.holo_green_light);
+            mListViewAnswers.setSelected(true);
             mListViewAnswers.setStackFromBottom(true);
             mButtonCommit.setOnClickListener(this);
             mButtonFinish.setOnClickListener(this);
@@ -84,14 +96,10 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
         if (q != null) {
             mCurrentQuestion = q;
         } else {
-            mCallback.callSessionResult(mSession);
+            endProcess();
         }
 
         updateLayout();
-    }
-
-    private void commitAnswer() {
-        /*TODO check selected answer and add it to rate of session*/
     }
 
     private void updateLayout() {
@@ -105,25 +113,48 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
         mListViewAnswers.setAdapter(adapter);
     }
 
+    private void endProcess() {
+        mSession.setNumOfRightAnswers(mNumOfRightAnswers);
+        mCallback.callSessionResult(mSession);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_finish_test: {
-                mCallback.callSessionResult(mSession);
+                endProcess();
                 break;
             }
             case R.id.button_commit: {
                 if (mIsAnswerCommited) {
-                    /*TODO next question*/
+                    //switch to next question
                     nextQuestion();
                     mButtonCommit.setText(BTN_COMMIT);
+                    mListViewAnswers.setEnabled(true);
+                    mListViewAnswers.setSelector(android.R.color.holo_green_light);
+                    mIsAnswerCommited = !mIsAnswerCommited;
                 } else {
-                    /*TODO commit answer*/
+                    //committing answer
                     mButtonCommit.setText(BTN_NEXT);
-                    commitAnswer();
+
+                    Answer usersAnswer = (Answer)mListViewAnswers.getItemAtPosition(
+                            mListViewAnswers.getCheckedItemPosition());
+
+                    if (usersAnswer != null) {
+                        if (usersAnswer.isIsRight()) {
+                            mNumOfRightAnswers++;
+                        } else {
+                            mListViewAnswers.setSelector(android.R.color.holo_red_dark);
+                            /*TODO Highlight here right answer*/
+                        }
+
+                        mListViewAnswers.setEnabled(false);
+                        mIsAnswerCommited = !mIsAnswerCommited;
+                    } else {
+                        Toast.makeText(mContext, "Choose your answer!", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
-                mIsAnswerCommited = !mIsAnswerCommited;
                 break;
             }
         }

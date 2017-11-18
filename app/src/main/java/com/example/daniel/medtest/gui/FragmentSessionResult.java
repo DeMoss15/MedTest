@@ -50,8 +50,13 @@ public class FragmentSessionResult extends FragmentSubSession implements View.On
         super.onViewCreated(view, savedInstanceState);
 
         mTextViewTestName.setText(mSession.getTestName());
-        mTextViewAnswers.setText("" + mSession.getNumOfQuestionsInTest()
-                + "/" + mSession.getNumOfQuestions() + "/0");
+        mTextViewAnswers.setText("" + mSession.getNumOfQuestions()
+                + "/" + mSession.getNumOfRightAnswers());
+
+        int seconds = ((Long)(mSession.getTimeInMilliseconds() % 6000)).intValue();
+        int minutes = ((Long)(mSession.getTimeInMilliseconds() / 6000 - seconds)).intValue();
+
+        mTextViewTime.setText("" + minutes + ":" + seconds);
         mButtonExit.setOnClickListener(this);
     }
 

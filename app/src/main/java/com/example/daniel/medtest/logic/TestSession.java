@@ -18,6 +18,7 @@ public final class TestSession {
     private long mTimeInMilliseconds;
     private boolean mShuffling;
     private Set<Integer> mShowedQuestions;
+    private int mNumOfRightAnswers;
 
     public TestSession(Test test, int numOfQuestionsInSession, long timeForTesting, boolean shuffling){
         this.mChoosedTest = test;
@@ -43,7 +44,7 @@ public final class TestSession {
 
             mShowedQuestions.add(nextNum);
         } else {
-            // i++ in other way
+            // i++ in another way
             nextNum = mShowedQuestions.size();
         }
 
@@ -60,11 +61,15 @@ public final class TestSession {
         return mChoosedTest.getTestName();
     }
 
-    public int getNumOfQuestionsInTest() {
-        return mChoosedTest.getQuestions().size();
+    public int getNumOfQuestions() {
+        return mShowedQuestions.size();
     }
 
-    public int getNumOfQuestions() {
-        return mNumOfQuestionsInSession;
+    public void setNumOfRightAnswers(int numOfRightAnswers) {
+        this.mNumOfRightAnswers = numOfRightAnswers;
+    }
+
+    public int getNumOfRightAnswers() {
+        return mNumOfRightAnswers;
     }
 }
