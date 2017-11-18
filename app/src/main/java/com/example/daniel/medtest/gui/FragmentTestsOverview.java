@@ -105,7 +105,9 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
         mListViewTests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mCallback.callSessionActivity((Test)adapterView.getItemAtPosition(i));
+                Test test = (Test)adapterView.getItemAtPosition(i);
+                test = mListOfTests.getTestFromDB(test);
+                mCallback.callSessionActivity(test);
             }
         });
     }

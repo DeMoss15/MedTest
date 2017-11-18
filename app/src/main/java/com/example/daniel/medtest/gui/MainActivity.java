@@ -9,13 +9,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.daniel.medtest.R;
+import com.example.daniel.medtest.database.DBHandler;
 import com.example.daniel.medtest.datatypes.Test;
+import com.example.daniel.medtest.logic.ListOfTests;
 
 public class MainActivity extends AppCompatActivity implements ReplaceabelFragment.OnHeadlineSelectedListener{
 
     FragmentIntputTest mFragmentInput = new FragmentIntputTest();
     FragmentTestsOverview mFragmentOverview = new FragmentTestsOverview();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,9 @@ public class MainActivity extends AppCompatActivity implements ReplaceabelFragme
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        DBHandler db = new DBHandler(this);
+        ListOfTests.setDBHandler(db);
 
         callOverviewFragment();
     }

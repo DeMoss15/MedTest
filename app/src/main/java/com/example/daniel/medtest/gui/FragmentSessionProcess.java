@@ -2,26 +2,20 @@ package com.example.daniel.medtest.gui;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.daniel.medtest.R;
-import com.example.daniel.medtest.datatypes.Answer;
 import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.logic.AnswersAdapter;
 import com.example.daniel.medtest.logic.TestSession;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,7 +95,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     }
 
     private void updateLayout() {
-        mTextViewQuestion.setText(mCurrentQuestion.getmQuestion());
+        mTextViewQuestion.setText(mCurrentQuestion.getQuestion());
 
         AnswersAdapter adapter = new AnswersAdapter(
                 mContext,

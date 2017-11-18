@@ -13,6 +13,7 @@ public final class Test implements Serializable {
 
     private String mTestName;
     private List<Question> mQuestions;
+    private int mId;
 
     public Test() {
         mTestName = "";
@@ -22,10 +23,6 @@ public final class Test implements Serializable {
     public Test(String testName) {
         this.mTestName = testName;
         mQuestions = new LinkedList<>();
-    }
-
-    public void setTestName(String testName) {
-        this.mTestName = testName;
     }
 
     public String getTestName() {
@@ -38,5 +35,13 @@ public final class Test implements Serializable {
 
     public List<Question> getQuestions() {
         return mQuestions;
+    }
+
+    public void setId(int Id) {
+        this.mId = Id;
+    }
+
+    public int getId() {
+        return mId;
     }
 }

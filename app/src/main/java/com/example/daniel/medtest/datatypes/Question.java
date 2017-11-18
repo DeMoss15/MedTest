@@ -19,7 +19,7 @@ public final class Question implements Serializable{
         this.mQuestion = question;
     }
 
-    public String getmQuestion(){
+    public String getQuestion(){
         return mQuestion;
     }
 

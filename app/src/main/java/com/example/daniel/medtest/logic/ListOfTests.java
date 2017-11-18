@@ -1,8 +1,8 @@
 package com.example.daniel.medtest.logic;
 
+import com.example.daniel.medtest.database.DBHandler;
 import com.example.daniel.medtest.datatypes.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +11,8 @@ import java.util.List;
 
 public final class ListOfTests {
 
-    private List<Test> mTests;
+    private static List<Test> sTests;
+    private static DBHandler sDB;
 
     private static final ListOfTests ourInstance = new ListOfTests();
 
@@ -20,26 +21,25 @@ public final class ListOfTests {
     }
 
     private ListOfTests() {
-        mTests = new ArrayList<>();
+    }
+
+    public static void setDBHandler(DBHandler dbHandler) {
+        sDB = dbHandler;
+        sTests = sDB.getTestsList();
     }
 
     public void addTest(Test test) {
-        mTests.add(test);
-    }
-
-    public String[] getTestsNames() {
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i < mTests.size(); i++) {
-            result.append(mTests.get(i).getTestName());
-            if (i < mTests.size() - 1){
-                result.append("/S/");
-            }
-        }
-        return result.toString().split("/S/");
+        test.setId(sTests.size() + 1);
+        sTests.add(test);
+        /*TODO push test to database*/
+        sDB.putTest(test);
     }
 
     public List<Test> getTests(){
-        return mTests;
+        return sTests;
+    }
+
+    public Test getTestFromDB(Test test) {
+        return sDB.getTest(test);
     }
 }
