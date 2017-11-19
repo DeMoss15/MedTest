@@ -20,6 +20,13 @@ import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.logic.AnswersAdapter;
 import com.example.daniel.medtest.logic.TestSession;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -105,10 +112,25 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     private void updateLayout() {
         mTextViewQuestion.setText(mCurrentQuestion.getQuestion());
 
+        List<Answer> shuffledAnswers = new LinkedList<>();
+        Set<Integer> numbers = new LinkedHashSet<>();
+        int size = mCurrentQuestion.getAnswers().size();
+        Log.d("answers", "size = " + size);
+
+        while (numbers.size() != size) {
+            int newNum = Math.abs(new Random().nextInt() % size);
+            Log.d("answers", "newNum = " + newNum);
+            numbers.add(newNum);
+        }
+
+        for (Integer i:numbers) {
+            shuffledAnswers.add(mCurrentQuestion.getAnswers().get(i));
+        }
+
         AnswersAdapter adapter = new AnswersAdapter(
                 mContext,
                 android.R.layout.simple_list_item_1,
-                mCurrentQuestion.getAnswers());
+                shuffledAnswers);
 
         mListViewAnswers.setAdapter(adapter);
     }
@@ -145,7 +167,14 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
                             mNumOfRightAnswers++;
                         } else {
                             mListViewAnswers.setSelector(android.R.color.holo_red_dark);
-                            /*TODO Highlight here right answer*/
+
+                            // highlighting right answer
+                            for (int i = 0; i < mCurrentQuestion.getAnswers().size(); i++) {
+                                if (((Answer)mListViewAnswers.getAdapter().getItem(i)).isIsRight()) {
+                                    mListViewAnswers.getChildAt(i).setBackgroundColor(
+                                            getResources().getColor(android.R.color.holo_green_light));
+                                }
+                            }
                         }
 
                         mListViewAnswers.setEnabled(false);
