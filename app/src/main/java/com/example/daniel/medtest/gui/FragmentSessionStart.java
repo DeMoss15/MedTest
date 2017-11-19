@@ -120,7 +120,7 @@ public final class FragmentSessionStart extends FragmentSubSession implements Vi
                 long timer = 0;
 
                 if (mSwitchTimer.isChecked() && !mTextInputTimeLimit.getText().toString().isEmpty()){
-                    timer = 6000 * Integer.parseInt(mTextInputTimeLimit.getText().toString());
+                    timer = 60000 * Integer.parseInt(mTextInputTimeLimit.getText().toString());
                 }
 
                 mTestSession = new TestSession(

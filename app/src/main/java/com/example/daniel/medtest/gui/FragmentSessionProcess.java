@@ -3,6 +3,7 @@ package com.example.daniel.medtest.gui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,11 +49,19 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     @BindView(R.id.button_finish_test)
     Button mButtonFinish;
 
+    private Context mContext;
+
     private TestSession mSession;
     private Question mCurrentQuestion;
+
     private boolean mIsAnswerCommited;
-    private Context mContext;
+
     private int mNumOfRightAnswers = 0;
+    private List<Answer> mShuffledAnswers;
+
+    private boolean mIsTimerRunning = false;
+    private CountDownTimer mTimer;
+    private long mTimeLeft;
 
     public FragmentSessionProcess() {
         // Required empty public constructor
@@ -76,25 +85,73 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(mSession == null){
-            Log.d("Session", "Session is null");
-            mCallback.cancelSession();
-        } else {
-            mCurrentQuestion = mSession.getNextQuestion();
+        mCurrentQuestion = mSession.getNextQuestion();
 
-            mTextViewTestName.setText(mSession.getTestName());
-            updateLayout();
+        mTextViewTestName.setText(mSession.getTestName());
+        updateLayout();
 
-            if (mSession.getTimeInMilliseconds() == 0) {
-                mTextViewTime.setText("");
-            }
-            mListViewAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            mListViewAnswers.setSelector(android.R.color.holo_green_light);
-            mListViewAnswers.setSelected(true);
-            mListViewAnswers.setStackFromBottom(true);
-            mButtonCommit.setOnClickListener(this);
-            mButtonFinish.setOnClickListener(this);
+        if (mSession.getTimeInMilliseconds() == 0) {
+            mTextViewTime.setText("");
         }
+        mListViewAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mListViewAnswers.setSelector(android.R.color.holo_green_light);
+        mListViewAnswers.setSelected(true);
+        mListViewAnswers.setStackFromBottom(true);
+        mButtonCommit.setOnClickListener(this);
+        mButtonFinish.setOnClickListener(this);
+
+        mTimeLeft = mSession.getTimeInMilliseconds();
+        if (mTimeLeft != 0){
+            startStopTimer();
+        }
+    }
+
+    private void startStopTimer() {
+        if (!mIsTimerRunning) {
+            startTimer();
+        } else {
+            stopTimer();
+        }
+        mIsTimerRunning = !mIsTimerRunning;
+    }
+
+    private void startTimer() {
+        mTimer = new CountDownTimer(mTimeLeft, 1000) {
+            @Override
+            public void onTick(long l) {
+                mTimeLeft = l;
+                updateTime();
+            }
+
+            @Override
+            public void onFinish() {
+                endProcess();
+            }
+        }.start();
+    }
+
+    private void stopTimer() {
+        mTimer.cancel();
+    }
+
+    private void updateTime() {
+        int minutes = (int) mTimeLeft / 60000;
+        int seconds = (int) mTimeLeft % 60000 / 1000;
+
+        String timeStr;
+        timeStr = "" + minutes + ":";
+        if (seconds < 10){
+            timeStr += "0";
+        }
+        timeStr += seconds;
+
+        mTextViewTime.setText(timeStr);
+    }
+
+    private void endProcess() {
+        mSession.setTimeInMilliseconds(mSession.getTimeInMilliseconds() - mTimeLeft);
+        mSession.setNumOfRightAnswers(mNumOfRightAnswers);
+        mCallback.callSessionResult(mSession);
     }
 
     private void nextQuestion(){
@@ -112,38 +169,32 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     private void updateLayout() {
         mTextViewQuestion.setText(mCurrentQuestion.getQuestion());
 
-        List<Answer> shuffledAnswers = new LinkedList<>();
+        mShuffledAnswers = new LinkedList<>();
         Set<Integer> numbers = new LinkedHashSet<>();
         int size = mCurrentQuestion.getAnswers().size();
-        Log.d("answers", "size = " + size);
 
         while (numbers.size() != size) {
             int newNum = Math.abs(new Random().nextInt() % size);
-            Log.d("answers", "newNum = " + newNum);
             numbers.add(newNum);
         }
 
         for (Integer i:numbers) {
-            shuffledAnswers.add(mCurrentQuestion.getAnswers().get(i));
+            mShuffledAnswers.add(mCurrentQuestion.getAnswers().get(i));
         }
 
         AnswersAdapter adapter = new AnswersAdapter(
                 mContext,
                 android.R.layout.simple_list_item_1,
-                shuffledAnswers);
+                mShuffledAnswers);
 
         mListViewAnswers.setAdapter(adapter);
-    }
-
-    private void endProcess() {
-        mSession.setNumOfRightAnswers(mNumOfRightAnswers);
-        mCallback.callSessionResult(mSession);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_finish_test: {
+                startStopTimer();
                 endProcess();
                 break;
             }
@@ -169,7 +220,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
                             mListViewAnswers.setSelector(android.R.color.holo_red_dark);
 
                             // highlighting right answer
-                            for (int i = 0; i < mCurrentQuestion.getAnswers().size(); i++) {
+                            for (int i = 0; i < mShuffledAnswers.size(); i++) {
                                 if (((Answer)mListViewAnswers.getAdapter().getItem(i)).isIsRight()) {
                                     mListViewAnswers.getChildAt(i).setBackgroundColor(
                                             getResources().getColor(android.R.color.holo_green_light));

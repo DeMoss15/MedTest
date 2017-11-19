@@ -57,6 +57,10 @@ public final class TestSession {
         return mTimeInMilliseconds;
     }
 
+    public void setTimeInMilliseconds(long TimeInMilliseconds) {
+        this.mTimeInMilliseconds = TimeInMilliseconds;
+    }
+
     public String getTestName() {
         return mChoosedTest.getTestName();
     }
