@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MedTest</string>
+    <string name="app_name" translatable="false">MedTest</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->

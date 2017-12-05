@@ -65,7 +65,11 @@ public final class TestSession {
         return mChoosedTest.getTestName();
     }
 
-    public int getNumOfQuestions() {
+    public int getNumOfQuestionsInSession(){
+        return mNumOfQuestionsInSession;
+    }
+
+    public int getNumOfShowedQuestions() {
         return mShowedQuestions.size();
     }
 

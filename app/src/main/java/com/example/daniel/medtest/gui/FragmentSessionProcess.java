@@ -5,11 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,7 +19,6 @@ import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.logic.AnswersAdapter;
 import com.example.daniel.medtest.logic.TestSession;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,6 +41,8 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     TextView mTextViewQuestion;
     @BindView(R.id.text_view_timer)
     TextView mTextViewTime;
+    @BindView(R.id.tv_questions_counter)
+    TextView mTextViewQuestionsCounter;
     @BindView(R.id.button_commit)
     Button mButtonCommit;
     @BindView(R.id.button_finish_test)
@@ -53,6 +52,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
 
     private TestSession mSession;
     private Question mCurrentQuestion;
+    private AnswersAdapter mAnswersAdapter;
 
     private boolean mIsAnswerCommited;
 
@@ -62,6 +62,8 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     private boolean mIsTimerRunning = false;
     private CountDownTimer mTimer;
     private long mTimeLeft;
+
+    private int mQuestionsCounter = 0;
 
     public FragmentSessionProcess() {
         // Required empty public constructor
@@ -85,14 +87,9 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mCurrentQuestion = mSession.getNextQuestion();
+        nextQuestion();
 
         mTextViewTestName.setText(mSession.getTestName());
-        updateLayout();
-
-        if (mSession.getTimeInMilliseconds() == 0) {
-            mTextViewTime.setText("");
-        }
         mListViewAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListViewAnswers.setSelector(android.R.color.holo_green_light);
         mListViewAnswers.setSelected(true);
@@ -103,6 +100,8 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
         mTimeLeft = mSession.getTimeInMilliseconds();
         if (mTimeLeft != 0){
             startStopTimer();
+        } else {
+            mTextViewTime.setText("");
         }
     }
 
@@ -118,13 +117,14 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     private void startTimer() {
         mTimer = new CountDownTimer(mTimeLeft, 1000) {
             @Override
-            public void onTick(long l) {
-                mTimeLeft = l;
+            public void onTick(long t) {
+                mTimeLeft = t;
                 updateTime();
             }
 
             @Override
             public void onFinish() {
+                mTimeLeft = 0;
                 endProcess();
             }
         }.start();
@@ -138,14 +138,17 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
         int minutes = (int) mTimeLeft / 60000;
         int seconds = (int) mTimeLeft % 60000 / 1000;
 
-        String timeStr;
-        timeStr = "" + minutes + ":";
-        if (seconds < 10){
-            timeStr += "0";
+        StringBuilder sbTime = new StringBuilder();
+        if (minutes < 10){
+            sbTime.append("0");
         }
-        timeStr += seconds;
+        sbTime.append(minutes).append(":");
+        if (seconds < 10){
+            sbTime.append("0");
+        }
+        sbTime.append(seconds);
 
-        mTextViewTime.setText(timeStr);
+        mTextViewTime.setText(sbTime);
     }
 
     private void endProcess() {
@@ -159,35 +162,40 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
 
         if (q != null) {
             mCurrentQuestion = q;
+
+            mShuffledAnswers = new LinkedList<>();
+            Set<Integer> numbers = new LinkedHashSet<>();
+            int size = mCurrentQuestion.getAnswers().size();
+
+            while (mShuffledAnswers.size() != size) {
+                int newNum = Math.abs(new Random().nextInt() % size);
+                if (!numbers.contains(newNum)) {
+                    numbers.add(newNum);
+                    mShuffledAnswers.add(mCurrentQuestion.getAnswers().get(newNum));
+                }
+            }
+
+            mAnswersAdapter = new AnswersAdapter(
+                    mContext,
+                    android.R.layout.simple_list_item_1,
+                    mShuffledAnswers);
+
+            updateLayout();
         } else {
             endProcess();
         }
-
-        updateLayout();
     }
 
     private void updateLayout() {
+        StringBuilder sbQuestCounter = new StringBuilder();
+        sbQuestCounter
+                .append(++mQuestionsCounter)
+                .append("/")
+                .append(mSession.getNumOfQuestionsInSession());
+
+        mListViewAnswers.setAdapter(mAnswersAdapter);
+        mTextViewQuestionsCounter.setText(sbQuestCounter);
         mTextViewQuestion.setText(mCurrentQuestion.getQuestion());
-
-        mShuffledAnswers = new LinkedList<>();
-        Set<Integer> numbers = new LinkedHashSet<>();
-        int size = mCurrentQuestion.getAnswers().size();
-
-        while (numbers.size() != size) {
-            int newNum = Math.abs(new Random().nextInt() % size);
-            numbers.add(newNum);
-        }
-
-        for (Integer i:numbers) {
-            mShuffledAnswers.add(mCurrentQuestion.getAnswers().get(i));
-        }
-
-        AnswersAdapter adapter = new AnswersAdapter(
-                mContext,
-                android.R.layout.simple_list_item_1,
-                mShuffledAnswers);
-
-        mListViewAnswers.setAdapter(adapter);
     }
 
     @Override
@@ -203,8 +211,8 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
                     //switch to next question
                     nextQuestion();
                     mButtonCommit.setText(BTN_COMMIT);
-                    mListViewAnswers.setEnabled(true);
                     mListViewAnswers.setSelector(android.R.color.holo_green_light);
+                    mListViewAnswers.setEnabled(true);
                     mIsAnswerCommited = !mIsAnswerCommited;
                 } else {
                     //committing answer

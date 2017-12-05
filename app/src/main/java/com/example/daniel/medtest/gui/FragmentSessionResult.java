@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.example.daniel.medtest.R;
 import com.example.daniel.medtest.logic.TestSession;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -25,6 +27,8 @@ public class FragmentSessionResult extends FragmentSubSession implements View.On
     TextView mTextViewAnswers;
     @BindView(R.id.button_exit_session)
     Button mButtonExit;
+    @BindView(R.id.tv_percents)
+    TextView mTextViewPercents;
 
     private TestSession mSession;
 
@@ -50,13 +54,42 @@ public class FragmentSessionResult extends FragmentSubSession implements View.On
         super.onViewCreated(view, savedInstanceState);
 
         mTextViewTestName.setText(mSession.getTestName());
-        mTextViewAnswers.setText("" + mSession.getNumOfQuestions()
-                + "/" + mSession.getNumOfRightAnswers());
+
+        StringBuilder sbResults = new StringBuilder();
+        sbResults
+                .append(mSession.getNumOfRightAnswers())
+                .append("/")
+                .append(mSession.getNumOfShowedQuestions());
+
+        mTextViewAnswers.setText(sbResults);
+
+        StringBuilder sbPercents = new StringBuilder();
+        sbPercents
+                .append(
+                        String.format(
+                                Locale.getDefault(),
+                                "%.1f",
+                                (double)mSession.getNumOfRightAnswers()
+                                        / (double)mSession.getNumOfShowedQuestions()
+                                        * 100.0f))
+                .append("%");
+
+        mTextViewPercents.setText(sbPercents);
 
         int minutes = (int) mSession.getTimeInMilliseconds() / 60000;
         int seconds = (int) mSession.getTimeInMilliseconds() % 60000 / 1000;
 
-        mTextViewTime.setText("" + minutes + ":" + seconds);
+        StringBuilder sbTime = new StringBuilder();
+        if (minutes < 10){
+            sbTime.append("0");
+        }
+        sbTime.append(minutes).append(" : ");
+        if (seconds < 10){
+            sbTime.append("0");
+        }
+        sbTime.append(seconds);
+
+        mTextViewTime.setText(sbTime);
         mButtonExit.setOnClickListener(this);
     }
 

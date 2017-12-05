@@ -40,6 +40,10 @@ public final class ListOfTests {
     }
 
     public Test getTestFromDB(Test test) {
-        return sDB.getTest(test);
+        if(test.getQuestions().size() == 0) {
+            return sDB.getTest(test);
+        } else {
+            return test;
+        }
     }
 }

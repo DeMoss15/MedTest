@@ -19,8 +19,14 @@ import java.util.List;
 
 public final class AnswersAdapter extends ArrayAdapter<Answer> {
 
+    private boolean mIsChecked = false;
+
     public AnswersAdapter(@NonNull Context context, int resource, @NonNull List<Answer> objects) {
         super(context, resource, objects);
+    }
+
+    public void setChecked(boolean b){
+        this.mIsChecked = b;
     }
 
     @NonNull
