@@ -10,16 +10,17 @@ import java.util.Map;
  * Created by Daniel on 13.11.2017.
  */
 
-public final class Question implements Serializable{
+public final class Question implements Serializable {
 
     private String mQuestion;
     private List<Answer> mAnswers;
+    private int mId;
 
-    public Question(String question){
+    public Question(String question) {
         this.mQuestion = question;
     }
 
-    public String getQuestion(){
+    public String getQuestion() {
         return mQuestion;
     }
 
@@ -29,5 +30,13 @@ public final class Question implements Serializable{
 
     public List<Answer> getAnswers() {
         return mAnswers;
+    }
+
+    public void setId(int mId) {
+        this.mId = mId;
+    }
+
+    public int getId() {
+        return mId;
     }
 }

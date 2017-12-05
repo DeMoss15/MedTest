@@ -13,6 +13,9 @@ import com.example.daniel.medtest.database.DBHandler;
 import com.example.daniel.medtest.datatypes.Test;
 import com.example.daniel.medtest.logic.ListOfTests;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 public class MainActivity extends AppCompatActivity implements ReplaceabelFragment.OnHeadlineSelectedListener{
 
     FragmentIntputTest mFragmentInput = new FragmentIntputTest();
@@ -26,6 +29,12 @@ public class MainActivity extends AppCompatActivity implements ReplaceabelFragme
         setSupportActionBar(toolbar);
 
         DBHandler db = new DBHandler(this);
+        try {
+            db.createDataBase();
+        } catch (IOException ioe) {
+            throw new Error("Unable to create database");
+        }
+        db.openDataBase();
         ListOfTests.setDBHandler(db);
 
         callOverviewFragment();

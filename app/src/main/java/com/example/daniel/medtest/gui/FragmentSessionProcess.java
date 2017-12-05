@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     private Question mCurrentQuestion;
     private AnswersAdapter mAnswersAdapter;
 
-    private boolean mIsAnswerCommited;
+    private boolean mIsAnswerCommitted;
 
     private int mNumOfRightAnswers = 0;
     private List<Answer> mShuffledAnswers;
@@ -87,8 +88,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        nextQuestion();
-
+        mTextViewQuestion.setMovementMethod(new ScrollingMovementMethod());
         mTextViewTestName.setText(mSession.getTestName());
         mListViewAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListViewAnswers.setSelector(android.R.color.holo_green_light);
@@ -103,6 +103,8 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
         } else {
             mTextViewTime.setText("");
         }
+
+        nextQuestion();
     }
 
     private void startStopTimer() {
@@ -207,13 +209,13 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
                 break;
             }
             case R.id.button_commit: {
-                if (mIsAnswerCommited) {
+                if (mIsAnswerCommitted) {
                     //switch to next question
                     nextQuestion();
                     mButtonCommit.setText(BTN_COMMIT);
                     mListViewAnswers.setSelector(android.R.color.holo_green_light);
                     mListViewAnswers.setEnabled(true);
-                    mIsAnswerCommited = !mIsAnswerCommited;
+                    mIsAnswerCommitted = !mIsAnswerCommitted;
                 } else {
                     //committing answer
                     mButtonCommit.setText(BTN_NEXT);
@@ -237,7 +239,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
                         }
 
                         mListViewAnswers.setEnabled(false);
-                        mIsAnswerCommited = !mIsAnswerCommited;
+                        mIsAnswerCommitted = !mIsAnswerCommitted;
                     } else {
                         Toast.makeText(mContext, "Choose your answer!", Toast.LENGTH_SHORT).show();
                     }
