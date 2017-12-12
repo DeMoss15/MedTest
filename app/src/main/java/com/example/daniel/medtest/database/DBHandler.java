@@ -254,4 +254,10 @@ public final class DBHandler extends SQLiteOpenHelper{
 
         cursor.close();
     }
+
+    public void deleteTest(Test test) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM " + TABLE_TESTS + " WHERE " + KEY_TEST_ID + " = " + test.getId());
+    }
 }

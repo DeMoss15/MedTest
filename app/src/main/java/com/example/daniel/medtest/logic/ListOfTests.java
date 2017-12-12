@@ -31,12 +31,16 @@ public final class ListOfTests {
     public void addTest(Test test) {
         test.setId(sTests.size() + 1);
         sTests.add(test);
-        /*TODO push test to database*/
         sDB.putTest(test);
     }
 
     public List<Test> getTests(){
         return sTests;
+    }
+
+    public void deleteTest(Test test) {
+        sDB.deleteTest(test);
+        sTests.remove(test);
     }
 
     public Test getTestFromDB(Test test) {
