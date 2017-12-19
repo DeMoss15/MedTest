@@ -12,13 +12,11 @@ import com.example.daniel.medtest.datatypes.Answer;
 import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.datatypes.Test;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -168,15 +166,16 @@ public final class DBHandler extends SQLiteOpenHelper{
 
                 if (cursorAnswers.moveToFirst()) {
                     List<Answer> answers = new ArrayList<>();
+                    Answer curAnswer = null;
 
                     do {
-                        answers.add(
-                                new Answer(
-                                        cursorAnswers.getString(cursorAnswers.getColumnIndex(KEY_ANSWER)),
-                                        cursorAnswers.getInt(cursorAnswers.getColumnIndex(KEY_ANSWER_IS_RIGHT))
-                                                == 1
-                                )
+                        curAnswer = new Answer(
+                                cursorAnswers.getString(cursorAnswers.getColumnIndex(KEY_ANSWER)),
+                                cursorAnswers.getInt(cursorAnswers.getColumnIndex(KEY_ANSWER_IS_RIGHT))
+                                        == 1
                         );
+                        curAnswer.setId(cursorAnswers.getInt(cursorAnswers.getColumnIndex(KEY_ANSWER_ID)));
+                        answers.add(curAnswer);
                     } while (cursorAnswers.moveToNext());
 
                     question.setAnswers(answers);
@@ -237,16 +236,17 @@ public final class DBHandler extends SQLiteOpenHelper{
             db.insert(TABLE_QUESTIONS, null, values);
 
             List<Answer> answers = questions.get(i).getAnswers();
+            cursor = db.rawQuery("SELECT max(_id) FROM "+ TABLE_QUESTIONS, null);
+            cursor.moveToFirst();
 
             for (int j = 0; j < answers.size(); j++) {
-                cursor = db.rawQuery("SELECT max(_id) FROM "+ TABLE_QUESTIONS, null);
-                cursor.moveToFirst();
-
                 values = new ContentValues();
 
                 values.put(KEY_ANSWER, answers.get(j).getName());
-                values.put(KEY_ANSWER_IS_RIGHT, answers.get(j).isIsRight());
+                values.put(KEY_ANSWER_IS_RIGHT, answers.get(j).isRight());
                 values.put(KEY_ANSWER_QUESTION_ID, cursor.getInt(0));
+                int id = Integer.parseInt(Integer.toString(cursor.getInt(0)) + Integer.toString(j));
+                answers.get(j).setId(id);
 
                 db.insert(TABLE_ANSWERS, null, values);
             }

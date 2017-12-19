@@ -208,35 +208,38 @@ public final class FragmentSessionProcess extends FragmentSubSession implements 
             }
             case R.id.button_commit: {
                 if (mIsAnswerCommitted) {
+
                     //switch to next question
                     nextQuestion();
                     mButtonCommit.setText(getString(R.string.commit));
                     mListViewAnswers.setSelector(android.R.color.holo_green_light);
+                    mListViewAnswers.setSelected(true);
                     mListViewAnswers.setEnabled(true);
                     mIsAnswerCommitted = !mIsAnswerCommitted;
+
                 } else {
                     //committing answer
                     Answer usersAnswer = (Answer)mListViewAnswers.getItemAtPosition(
                             mListViewAnswers.getCheckedItemPosition());
 
                     if (usersAnswer != null) {
+
                         mButtonCommit.setText(getString(R.string.next));
 
-                        if (usersAnswer.isIsRight()) {
+                        if (usersAnswer.isRight()) {
                             mNumOfRightAnswers++;
-                        } else {
-                            mListViewAnswers.setSelector(android.R.color.holo_red_dark);
-
-                            // highlighting right answer
-                            for (int i = 0; i < mShuffledAnswers.size(); i++) {
-                                if (((Answer)mListViewAnswers.getAdapter().getItem(i)).isIsRight()) {
-                                    mListViewAnswers.getChildAt(i).setBackgroundColor(
-                                            getResources().getColor(android.R.color.holo_green_light));
-                                }
-                            }
                         }
 
-                        mListViewAnswers.setEnabled(false);
+                        mListViewAnswers.setSelector(android.R.color.transparent);
+                        mListViewAnswers.setSelected(false);
+
+                        mAnswersAdapter = new AnswersAdapter(
+                                mContext,
+                                android.R.layout.simple_list_item_1,
+                                mShuffledAnswers,
+                                usersAnswer);
+                        mListViewAnswers.setAdapter(mAnswersAdapter);
+
                         mIsAnswerCommitted = !mIsAnswerCommitted;
                     } else {
                         Toast.makeText(mContext, R.string.choose_answer, Toast.LENGTH_SHORT).show();

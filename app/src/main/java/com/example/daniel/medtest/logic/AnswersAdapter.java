@@ -19,8 +19,29 @@ import java.util.List;
 
 public final class AnswersAdapter extends ArrayAdapter<Answer> {
 
+    private boolean mIsCommitted = false;
+    private Answer mUsersAnswer = null;
+    private int mColorRight;
+    private int mColorFalse;
+    private int mColorBg;
+
+
     public AnswersAdapter(@NonNull Context context, int resource, @NonNull List<Answer> objects) {
         super(context, resource, objects);
+        setColors();
+    }
+
+    public AnswersAdapter(@NonNull Context context, int resource, @NonNull List<Answer> objects, Answer a) {
+        super(context, resource, objects);
+        this.mIsCommitted = true;
+        this.mUsersAnswer = a;
+        setColors();
+    }
+
+    private void setColors(){
+        mColorRight = getContext().getResources().getColor(android.R.color.holo_green_light);
+        mColorFalse = getContext().getResources().getColor(android.R.color.holo_red_dark);
+        mColorBg = getContext().getResources().getColor(android.R.color.transparent);
     }
 
     @NonNull
@@ -37,6 +58,18 @@ public final class AnswersAdapter extends ArrayAdapter<Answer> {
 
         if(currentAnswer != null) {
             tv.setText(currentAnswer.getName());
+            if (mIsCommitted && mUsersAnswer != null) {
+                if(currentAnswer.isRight()){
+                    tv.setBackgroundColor(mColorRight);
+                } else {
+
+                    if(currentAnswer.equals(mUsersAnswer)){
+                        tv.setBackgroundColor(mColorFalse);
+                    } else {
+                        tv.setBackgroundColor(mColorBg);
+                    }
+                }
+            }
         }
 
         return convertView;
