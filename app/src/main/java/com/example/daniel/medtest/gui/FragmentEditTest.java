@@ -20,7 +20,7 @@ import com.example.daniel.medtest.logic.ListOfTests;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public final class FragmentIntputTest extends ReplaceabelFragment implements View.OnClickListener {
+public final class FragmentEditTest extends FragmentSubEdit implements View.OnClickListener {
 
     @BindView(R.id.lv_questions)
     ListView mListViewQuestions;
@@ -35,16 +35,27 @@ public final class FragmentIntputTest extends ReplaceabelFragment implements Vie
 
     private ListOfTests mTests = ListOfTests.getInstance();
     private Context mContext;
+    private Test mCurrentTest;
+    private boolean mIsEditing;
 
-    public FragmentIntputTest() {
+    public FragmentEditTest() {
         // Required empty public constructor
+    }
+
+    public void edit(Test test){
+        this.mIsEditing = (test != null);
+        if (mIsEditing){
+            this.mCurrentTest = test;
+        } else {
+            this.mCurrentTest = new Test();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_intput_test, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_test, container, false);
         ButterKnife.bind(this, view);
         mContext = view.getContext();
         return view;
@@ -59,31 +70,31 @@ public final class FragmentIntputTest extends ReplaceabelFragment implements Vie
         mButtonCancel.setOnClickListener(this);
     }
 
-    private void createTest() {
-        Test newTest = new Test(mTextInputTestName.getText().toString());
-
-        /*parsing fragments*/
-
-        mTests.addTest(newTest);
-        mCallback.callOverviewFragment();
+    private void saveChanges() {
+        if (mIsEditing){
+            mTests.editTest(mCurrentTest);
+        } else {
+            mTests.addTest(mCurrentTest);
+        }
+        mCallback.cancelEditing();
     }
 
     @Override
     public void onClick(View view) {
         if (view == null || !(view instanceof TextView)) {
-            return; //нет свойства text
+            return;
         }
         switch (view.getId()){
             case R.id.button_add_question: {
-                Toast.makeText(mContext, "This function is in dev", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, R.string.func_in_dev, Toast.LENGTH_LONG).show();
                 break;
             }
             case R.id.button_add_test: {
-                createTest();
+                saveChanges();
                 break;
             }
             case R.id.button_cancel_input: {
-                mCallback.callOverviewFragment();
+                mCallback.cancelEditing();
                 break;
             }
         }

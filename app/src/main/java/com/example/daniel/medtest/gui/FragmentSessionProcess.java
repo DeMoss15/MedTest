@@ -29,10 +29,7 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentSessionProcess extends FragmentSubSession implements View.OnClickListener{
-
-    private final String BTN_NEXT = "Next";
-    private final String BTN_COMMIT = "Commit";
+public final class FragmentSessionProcess extends FragmentSubSession implements View.OnClickListener{
 
     @BindView(R.id.lv_answers)
     ListView mListViewAnswers;
@@ -90,6 +87,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
 
         mTextViewQuestion.setMovementMethod(new ScrollingMovementMethod());
         mTextViewTestName.setText(mSession.getTestName());
+
         mListViewAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListViewAnswers.setSelector(android.R.color.holo_green_light);
         mListViewAnswers.setSelected(true);
@@ -212,18 +210,18 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
                 if (mIsAnswerCommitted) {
                     //switch to next question
                     nextQuestion();
-                    mButtonCommit.setText(BTN_COMMIT);
+                    mButtonCommit.setText(getString(R.string.commit));
                     mListViewAnswers.setSelector(android.R.color.holo_green_light);
                     mListViewAnswers.setEnabled(true);
                     mIsAnswerCommitted = !mIsAnswerCommitted;
                 } else {
                     //committing answer
-                    mButtonCommit.setText(BTN_NEXT);
-
                     Answer usersAnswer = (Answer)mListViewAnswers.getItemAtPosition(
                             mListViewAnswers.getCheckedItemPosition());
 
                     if (usersAnswer != null) {
+                        mButtonCommit.setText(getString(R.string.next));
+
                         if (usersAnswer.isIsRight()) {
                             mNumOfRightAnswers++;
                         } else {
@@ -241,7 +239,7 @@ public class FragmentSessionProcess extends FragmentSubSession implements View.O
                         mListViewAnswers.setEnabled(false);
                         mIsAnswerCommitted = !mIsAnswerCommitted;
                     } else {
-                        Toast.makeText(mContext, "Choose your answer!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.choose_answer, Toast.LENGTH_SHORT).show();
                     }
                 }
 

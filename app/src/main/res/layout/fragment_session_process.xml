@@ -11,11 +11,11 @@
     <TextView
         android:id="@+id/tv_test_name_proc"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Test name"
+        android:text="@string/test_name"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="18sp"
@@ -65,7 +65,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Commit"
+        android:text="@string/commit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/button_finish_test" />
@@ -78,7 +78,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Finish"
+        android:text="@string/finish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_commit"
         app:layout_constraintStart_toStartOf="parent" />

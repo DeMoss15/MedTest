@@ -1,7 +1,9 @@
 package com.example.daniel.medtest.gui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,7 +34,7 @@ import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 
-public final class FragmentTestsOverview extends ReplaceabelFragment {
+public final class FragmentTestsOverview extends Fragment {
 
     private final int BROWSE_FILE_REQUEST_CODE = 1;
     private final int DIALOG_ID_TEST_MENU = 11;
@@ -43,11 +45,32 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
     @BindView(R.id.fab)
     FloatingActionButton mFAB;
 
+    //callback description
+    interface OnHeadlineSelectedListener{
+        void callEditActivity(Test test);
+        void callSessionActivity(Test test);
+        void callOverviewFragment();
+    };
+
+    OnHeadlineSelectedListener mCallback;
     private ListOfTests mListOfTests = ListOfTests.getInstance();
-    private FileParser mParser = new FileParser();
     private Context mContext;
 
     public FragmentTestsOverview() {
+        //empty constructor
+    }
+
+    //check implementation of callback
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (OnHeadlineSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement FragmentTestsOverview.OnHeadlineSelectedListener");
+        }
     }
 
     @Override
@@ -95,45 +118,48 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
         });
     }
 
+    //setting dialog
     private Dialog createDialog(int dialogId, final Test targetTest) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
         switch (dialogId) {
             case DIALOG_ID_TEST_MENU: {
-                final String[] testMenu = {"Edit", "Delete"};
+                final String[] testMenu = {getString(R.string.edit), getString(R.string.delete)};
 
                 builder
-                        .setTitle("Test menu")
+                        .setTitle(R.string.test_menu)
                         .setItems(testMenu, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int item) {
                                 if (item == 0) {
                                     //edit test
                                     Toast.makeText(mContext,
-                                            "This feature still in dev!",
+                                            R.string.func_in_dev,
                                             Toast.LENGTH_SHORT).show();
+                                    /*TODO: send test to edit*/
+                                    mCallback.callEditActivity(targetTest);
                                 } else if (item == 1) {
                                     //delete test
                                     mListOfTests.deleteTest(targetTest);
                                     updateList();
-                                }                           }
+                                }
+                            }
                         })
                         .setCancelable(true);
                 break;
             }
             case DIALOG_ID_ADD_TEST: {
                 builder
-                        .setTitle("Adding test")
-                        .setMessage("Choose way to add test")
-                        .setPositiveButton("Add by typing", new DialogInterface.OnClickListener() {
+                        .setTitle(R.string.adding_test)
+                        .setMessage(R.string.way_to_add_test)
+                        .setPositiveButton(R.string.add_by_typing, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int arg1) {
-                                if (getView() != null)
-                                    Snackbar.make(getView(), "Here will be another fragment", Snackbar.LENGTH_LONG).show();
-                                mCallback.callInputFragment();
+                                /*TODO: send test to edit*/
+                                mCallback.callEditActivity(null);
                             }
                         })
-                        .setNegativeButton("Add from file", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.add_from_file, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int arg1) {
                                 // selecting file
                                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -147,7 +173,7 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
                         .setOnCancelListener(new DialogInterface.OnCancelListener() {
                             public void onCancel(DialogInterface dialog) {
                                 if (getView() != null)
-                                    Snackbar.make(getView(), "Canceled", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(getView(), R.string.canceled, Snackbar.LENGTH_LONG).show();
                             }
                         });
                 break;
@@ -157,6 +183,7 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
         return builder.create();
     }
 
+    //checking results of called activity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -177,13 +204,14 @@ public final class FragmentTestsOverview extends ReplaceabelFragment {
         }
 
         if (fileStream != null){
-            mParser = new FileParser();
-            mParser.setFileStream(fileStream);
-            mParser.setFragment(this);
-            mParser.execute();
+            FileParser parser = new FileParser();
+            parser.setFileStream(fileStream);
+            parser.setFragment(this);
+            parser.execute();
         }
     }
 
+    //update list of tests UI
     public void updateList() {
        TestsAdapter testsAdapter = new TestsAdapter(
                mContext,

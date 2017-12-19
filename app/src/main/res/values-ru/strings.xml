@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MedTest</string>
+    <string name="action_settings">Настройки</string>
+    <string name="test_name">Название теста</string>
+    <string name="add_question">Добавить тест</string>
+    <string name="save_test">Сохранить тест</string>
+    <string name="cancel">Отмена</string>
+    <string name="commit">Подтвердить</string>
+    <string name="back_to_tests">К тестам</string>
+    <string name="finish">Закончить</string>
+    <string name="your_results">Результаты</string>
+    <string name="time">Время</string>
+    <string name="start_test">Начать тест</string>
+    <string name="timer">Таймер</string>
+    <string name="test_shuffling_toggle">Перемешать тест</string>
+    <string name="right_shown">Правильных/показанных</string>
+    <string name="str_num_of_questions">Количество вопросов</string>
+    <string name="str_required_time">Необходимое время</string>
+    <string name="next">Далее</string>
+    <string name="func_in_dev">Эта функция в разработке</string>
+    <string name="choose_answer">Выберите ответ!</string>
+    <string name="choose_another_num_of_questions">Отлично, тест завершен без ошибок! Пора поднять планку!)</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="adding_test">Добавление теста</string>
+    <string name="way_to_add_test">Выберите способ, которым будет удобнее добавить тест</string>
+    <string name="add_by_typing">Вручную</string>
+    <string name="canceled">Отменено</string>
+    <string name="add_from_file">Файлом</string>
+    <string name="test_menu">Меню теста</string>
+</resources>

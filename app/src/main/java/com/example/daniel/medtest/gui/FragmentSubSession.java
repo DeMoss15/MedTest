@@ -31,7 +31,7 @@ public class FragmentSubSession extends Fragment {
             mCallback = (OnHeadlineSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement FragmentSubSession.OnHeadlineSelectedListener");
         }
     }
 }

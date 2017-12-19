@@ -3,5 +3,31 @@
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="test_name">Test name</string>
+    <string name="add_question">Add question</string>
+    <string name="save_test">save test</string>
+    <string name="cancel">Cancel</string>
+    <string name="commit">Commit</string>
+    <string name="finish">Finish</string>
+    <string name="your_results">Your results</string>
+    <string name="time">Time</string>
+    <string name="right_shown">Right/Shown</string>
+    <string name="back_to_tests">Back to tests</string>
+    <string name="start_test">Start test</string>
+    <string name="str_num_of_questions">Number of questiond you need</string>
+    <string name="str_required_time">Enter the time required in minutes</string>
+    <string name="timer">Timer</string>
+    <string name="test_shuffling_toggle">Test shuffle</string>
+    <string name="next">Next</string>
+    <string name="func_in_dev">This function is in dev</string>
+    <string name="choose_answer">Choose your answer!</string>
+    <string name="choose_another_num_of_questions">Good boy. You did not make mistakes! Now choose a few more questions!</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="adding_test">Adding test</string>
+    <string name="way_to_add_test">Choose way to add test</string>
+    <string name="add_by_typing">Add by typing</string>
+    <string name="add_from_file">Add from file</string>
+    <string name="canceled">Canceled</string>
+    <string name="test_menu">Test menu</string>
 </resources>

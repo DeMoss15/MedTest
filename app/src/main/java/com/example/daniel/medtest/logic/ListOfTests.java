@@ -50,4 +50,8 @@ public final class ListOfTests {
             return test;
         }
     }
+
+    public void editTest(Test test) {
+
+    }
 }

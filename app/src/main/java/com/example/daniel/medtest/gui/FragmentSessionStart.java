@@ -112,8 +112,7 @@ public final class FragmentSessionStart extends FragmentSubSession implements Vi
             case R.id.button_start_test: {
 
                 if (mSeekBarNumOfQuestions.getProgress() == 0) {
-                    Toast.makeText(view.getContext(), "Good boy. You did not make mistakes!" +
-                            " Now choose a few more questions!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(view.getContext(), R.string.choose_another_num_of_questions, Toast.LENGTH_LONG).show();
                     break;
                 }
 

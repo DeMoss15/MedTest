@@ -17,7 +17,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentSessionResult extends FragmentSubSession implements View.OnClickListener {
+public final class FragmentSessionResult extends FragmentSubSession implements View.OnClickListener {
 
     @BindView(R.id.tv_test_name_res)
     TextView mTextViewTestName;

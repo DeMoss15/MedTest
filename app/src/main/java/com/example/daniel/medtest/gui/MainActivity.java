@@ -14,11 +14,9 @@ import com.example.daniel.medtest.datatypes.Test;
 import com.example.daniel.medtest.logic.ListOfTests;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
-public class MainActivity extends AppCompatActivity implements ReplaceabelFragment.OnHeadlineSelectedListener{
+public class MainActivity extends AppCompatActivity implements FragmentTestsOverview.OnHeadlineSelectedListener{
 
-    FragmentIntputTest mFragmentInput = new FragmentIntputTest();
     FragmentTestsOverview mFragmentOverview = new FragmentTestsOverview();
 
     @Override
@@ -63,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements ReplaceabelFragme
     }
 
     @Override
-    public void callInputFragment() {
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_layout, mFragmentInput)
-                .commit();
+    public void callEditActivity(Test test) {
+        // intent edit activity
+        Intent intent = new Intent(MainActivity.this, EditTestActivity.class);
+        intent.putExtra("TEST_TO_EDIT", test);
+        startActivity(intent);
     }
 
     @Override

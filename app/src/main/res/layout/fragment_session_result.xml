@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Test name"
+        android:text="@string/test_name"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -31,7 +31,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Your results"
+        android:text="@string/your_results"
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="italic"
@@ -46,7 +46,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Time"
+        android:text="@string/time"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/tv_time_res"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Right/Shown"
+        android:text="@string/right_shown"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/tv_answers_res"
         app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Back to tests"
+        android:text="@string/back_to_tests"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -116,5 +116,5 @@
         app:layout_constraintBottom_toTopOf="@+id/button_exit_session"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" tools:targetApi="lollipop"/>
 </android.support.constraint.ConstraintLayout>
