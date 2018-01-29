@@ -43,15 +43,13 @@ public final class FragmentSessionStart extends FragmentSubSession implements Vi
     @BindView(R.id.ti_time_limit)
     TextInputEditText mTextInputTimeLimit;
 
-    private Test mTest;
     private TestSession mTestSession;
 
     public FragmentSessionStart() {
         // Required empty public constructor
     }
 
-    public void startSession(Test test, TestSession session) {
-        this.mTest = test;
+    public void startSession(TestSession session) {
         this.mTestSession = session;
     }
 
@@ -68,7 +66,7 @@ public final class FragmentSessionStart extends FragmentSubSession implements Vi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSeekBarNumOfQuestions.setMax(mTest.getQuestions().size());
+        mSeekBarNumOfQuestions.setMax(mTestSession.getNumOfQuestionsInSession());
         mSeekBarNumOfQuestions.setProgress(mSeekBarNumOfQuestions.getMax());
         mSeekBarNumOfQuestions.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -96,7 +94,7 @@ public final class FragmentSessionStart extends FragmentSubSession implements Vi
                 }
             }
         });
-        mTextViewTestName.setText(mTest.getTestName());
+        mTextViewTestName.setText(mTestSession.getTestName());
         mTextViewNumOfQuest.setText("" + mSeekBarNumOfQuestions.getProgress());
         mButtonCancelTest.setOnClickListener(this);
         mButtonStartTest.setOnClickListener(this);
@@ -122,12 +120,12 @@ public final class FragmentSessionStart extends FragmentSubSession implements Vi
                     timer = 60000 * Integer.parseInt(mTextInputTimeLimit.getText().toString());
                 }
 
-                mTestSession = new TestSession(
-                        mTest,
+                mTestSession.setSessionSettings(
                         mSeekBarNumOfQuestions.getProgress(),
                         timer,
                         mSwitchShuffle.isChecked());
-                mCallback.callSessionProcess(mTestSession);
+
+                mCallback.callSessionProcess();
                 break;
             }
         }

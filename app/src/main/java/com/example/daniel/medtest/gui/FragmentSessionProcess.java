@@ -154,7 +154,7 @@ public final class FragmentSessionProcess extends FragmentSubSession implements 
     private void endProcess() {
         mSession.setTimeInMilliseconds(mSession.getTimeInMilliseconds() - mTimeLeft);
         mSession.setNumOfRightAnswers(mNumOfRightAnswers);
-        mCallback.callSessionResult(mSession);
+        mCallback.callSessionResult();
     }
 
     private void nextQuestion(){

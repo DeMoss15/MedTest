@@ -20,12 +20,18 @@ public final class TestSession {
     private Set<Integer> mShowedQuestions;
     private int mNumOfRightAnswers;
 
-    public TestSession(Test test, int numOfQuestionsInSession, long timeForTesting, boolean shuffling){
+    public TestSession(Test test) {
         this.mChoosedTest = test;
+        this.mNumOfQuestionsInSession = test.getQuestions().size();
+        this.mTimeInMilliseconds = 0;
+        this.mShuffling = false;
+        this.mShowedQuestions = new LinkedHashSet<>();
+    }
+
+    public void setSessionSettings(int numOfQuestionsInSession, long timeForTesting, boolean shuffling){
         this.mNumOfQuestionsInSession = numOfQuestionsInSession;
         this.mTimeInMilliseconds = timeForTesting;
         this.mShuffling = shuffling;
-        this.mShowedQuestions = new LinkedHashSet<>();
     }
 
     public Question getNextQuestion(){

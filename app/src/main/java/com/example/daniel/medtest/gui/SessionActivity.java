@@ -11,10 +11,17 @@ import com.example.daniel.medtest.logic.TestSession;
 
 public class SessionActivity extends AppCompatActivity implements FragmentSubSession.OnHeadlineSelectedListener {
 
-    FragmentSessionStart mFragmentSessionStart = new FragmentSessionStart();
-    FragmentSessionProcess mFragmentSessionProcess = new FragmentSessionProcess();
-    FragmentSessionResult mFragmentSessionResult = new FragmentSessionResult();
+    private final int SESSION_EMPTY = 0;
+    private final int SESSION_START = 1;
+    private final int SESSION_PROCESS = 2;
+    private final int SESSION_RESULT = 3;
+
+    private FragmentSessionStart mFragmentSessionStart = new FragmentSessionStart();
+    private FragmentSessionProcess mFragmentSessionProcess = new FragmentSessionProcess();
+    private FragmentSessionResult mFragmentSessionResult = new FragmentSessionResult();
     private TestSession mSession;
+    private boolean mIsActive;
+    private int mQueue = SESSION_EMPTY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,35 +29,73 @@ public class SessionActivity extends AppCompatActivity implements FragmentSubSes
         setContentView(R.layout.activity_session);
 
         Test test = (Test)getIntent().getSerializableExtra("TEST_TO_START");
-        callSessionStart(test);
+
+        if(test != null){
+            mSession = new TestSession(test);
+            callSessionStart();
+        } else {
+            cancelSession();
+        }
     }
 
     @Override
-    public void callSessionStart(Test test) {
-        mFragmentSessionStart.startSession(test, mSession);
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.session_container, mFragmentSessionStart)
-                .commit();
+    protected void onResume() {
+        super.onResume();
+        mIsActive = true;
+
+        if (mQueue == SESSION_START) {
+            callSessionStart();
+        } else if (mQueue == SESSION_PROCESS) {
+            callSessionProcess();
+        } else if (mQueue == SESSION_RESULT) {
+            callSessionResult();
+        }
+        mQueue = SESSION_EMPTY;
     }
 
     @Override
-    public void callSessionProcess(TestSession session) {
-        mSession = session;
+    protected void onPause() {
+        super.onPause();
+        mIsActive = false;
+    }
+
+    @Override
+    public void callSessionStart() {
+        mFragmentSessionStart.startSession(mSession);
+        if(mIsActive){
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.session_container, mFragmentSessionStart)
+                    .commit();
+        } else {
+            mQueue = SESSION_START;
+        }
+    }
+
+    @Override
+    public void callSessionProcess() {
         mFragmentSessionProcess.setSession(mSession);
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.session_container, mFragmentSessionProcess)
-                .commit();
+        if(mIsActive){
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.session_container, mFragmentSessionProcess)
+                    .commit();
+        } else {
+            mQueue = SESSION_PROCESS;
+        }
     }
 
     @Override
-    public void callSessionResult(TestSession session) {
-        mFragmentSessionResult.setSession(session);
-        getFragmentManager()
+    public void callSessionResult() {
+        mFragmentSessionResult.setSession(mSession);
+        if(mIsActive){
+            getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.session_container, mFragmentSessionResult)
                 .commit();
+        } else {
+            mQueue = SESSION_RESULT;
+        }
     }
 
     @Override

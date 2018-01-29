@@ -16,9 +16,9 @@ public class FragmentSubSession extends Fragment {
 
     interface OnHeadlineSelectedListener{
 
-        void callSessionStart(Test test);
-        void callSessionProcess(TestSession session);
-        void callSessionResult(TestSession session);
+        void callSessionStart();
+        void callSessionProcess();
+        void callSessionResult();
         void cancelSession();
     };
 

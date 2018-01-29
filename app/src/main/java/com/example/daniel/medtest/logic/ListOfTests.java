@@ -52,6 +52,7 @@ public final class ListOfTests {
     }
 
     public void editTest(Test test) {
-
+        sDB.deleteTest(test);
+        sDB.putTest(test);
     }
 }
