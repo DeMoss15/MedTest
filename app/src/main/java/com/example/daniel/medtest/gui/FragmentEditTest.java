@@ -8,14 +8,17 @@ import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.daniel.medtest.R;
+import com.example.daniel.medtest.datatypes.Question;
 import com.example.daniel.medtest.datatypes.Test;
 import com.example.daniel.medtest.logic.ListOfTests;
+import com.example.daniel.medtest.logic.QuestionsAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +71,19 @@ public final class FragmentEditTest extends FragmentSubEdit implements View.OnCl
         mButtonAddQuestion.setOnClickListener(this);
         mButtonAddTest.setOnClickListener(this);
         mButtonCancel.setOnClickListener(this);
+
+        if (mIsEditing){
+            mTextInputTestName.setText(mCurrentTest.getTestName());
+        }
+
+        mListViewQuestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mCallback.callQuestionEditFragment((Question) adapterView.getItemAtPosition(i));
+            }
+        });
+
+        updateQuestionsList();
     }
 
     private void saveChanges() {
@@ -77,6 +93,15 @@ public final class FragmentEditTest extends FragmentSubEdit implements View.OnCl
             mTests.addTest(mCurrentTest);
         }
         mCallback.cancelEditing();
+    }
+
+    private void updateQuestionsList() {
+
+        mListViewQuestions.setAdapter(
+                new QuestionsAdapter(
+                        mContext,
+                        android.R.layout.simple_list_item_1,
+                        mCurrentTest.getQuestions()));
     }
 
     @Override

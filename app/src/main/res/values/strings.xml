@@ -2,10 +2,9 @@
     <string name="app_name" translatable="false">MedTest</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="test_name">Test name</string>
     <string name="add_question">Add question</string>
-    <string name="save_test">save test</string>
+    <string name="save">save</string>
     <string name="cancel">Cancel</string>
     <string name="commit">Commit</string>
     <string name="finish">Finish</string>
@@ -30,4 +29,6 @@
     <string name="add_from_file">Add from file</string>
     <string name="canceled">Canceled</string>
     <string name="test_menu">Test menu</string>
+    <string name="question">Question?</string>
+    <string name="add_answer">Add answer</string>
 </resources>

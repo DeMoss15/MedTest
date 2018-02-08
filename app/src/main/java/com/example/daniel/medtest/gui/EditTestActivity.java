@@ -11,23 +11,28 @@ import com.example.daniel.medtest.datatypes.Test;
 public class EditTestActivity extends AppCompatActivity implements FragmentSubEdit.OnHeadlineSelectedListener{
 
     FragmentEditTest mFragmentEditTest = new FragmentEditTest();
+    FragmentEditQuestion mFragmentEditQuestion = new FragmentEditQuestion();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_test);
 
-        callTestEditFragment((Test)getIntent().getSerializableExtra("TEST_TO_EDIT"));
+        mFragmentEditTest.edit((Test)getIntent().getSerializableExtra("TEST_TO_EDIT"));
+        callTestEditFragment();
     }
 
     @Override
     public void callQuestionEditFragment(Question question) {
-
+        mFragmentEditQuestion.editQuestion(question);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.layout_edit_container, mFragmentEditQuestion)
+                .commit();
     }
 
     @Override
-    public void callTestEditFragment(Test test) {
-        mFragmentEditTest.edit(test);
+    public void callTestEditFragment() {
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.layout_edit_container, mFragmentEditTest)

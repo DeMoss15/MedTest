@@ -138,7 +138,7 @@ public final class FragmentTestsOverview extends Fragment {
                                             R.string.func_in_dev,
                                             Toast.LENGTH_SHORT).show();
                                     /*TODO: send test to edit*/
-                                    mCallback.callEditActivity(targetTest);
+                                    mCallback.callEditActivity(mListOfTests.getTestFromDB(targetTest));
                                 } else if (item == 1) {
                                     //delete test
                                     mListOfTests.deleteTest(targetTest);

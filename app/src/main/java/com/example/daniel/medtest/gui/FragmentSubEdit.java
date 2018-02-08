@@ -14,7 +14,7 @@ public class FragmentSubEdit extends Fragment {
 
     interface OnHeadlineSelectedListener{
         void callQuestionEditFragment(Question question);
-        void callTestEditFragment(Test test);
+        void callTestEditFragment();
         void cancelEditing();
     }
 

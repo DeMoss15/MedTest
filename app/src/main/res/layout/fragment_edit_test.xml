@@ -8,6 +8,21 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <ListView
+        android:id="@+id/lv_questions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/search_view_questions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
     <Button
         android:id="@+id/button_add_question"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
@@ -28,11 +43,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="@string/save_test"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="@+id/button_add_question"
         app:layout_constraintEnd_toStartOf="@+id/button_add_question"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/button_cancel_input" />
+        app:layout_constraintStart_toEndOf="@+id/button_cancel_input"
+        app:layout_constraintTop_toTopOf="@+id/button_add_question" />
 
     <Button
         android:id="@+id/button_cancel_input"
@@ -44,11 +61,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/button_add_question"
         app:layout_constraintEnd_toStartOf="@+id/button_add_test"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_view_questions" />
+        app:layout_constraintTop_toTopOf="@+id/button_add_question" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -68,20 +85,6 @@
             android:hint="@string/test_name" />
     </android.support.design.widget.TextInputLayout>
 
-    <ListView
-        android:id="@+id/lv_questions"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/search_view_questions"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
-
     <SearchView
         android:id="@+id/search_view_questions"
         android:layout_width="0dp"
@@ -89,7 +92,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_add_test"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/button_add_question"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
